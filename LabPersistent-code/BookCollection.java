@@ -233,9 +233,11 @@ public class BookCollection {
    */
   public static BookCollection loadFromXMLFile(File file) {
     // TODO: Implement this function yourself.
-    BookCollection result = null;
+
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
     ArrayList<Book> loadbook = new ArrayList<Book>();
+//    BookCollection bookCollection =new BookCollection(loadbook);
+
     try {
       DocumentBuilder db = dbf.newDocumentBuilder();
       Document doc = db.newDocument();
@@ -266,13 +268,15 @@ public class BookCollection {
       // Here return a list should return bookcollection
 
       // result = loadbook;
+      BookCollection bookCollection = new BookCollection(loadbook);
 
     } catch (Exception e) {
       e.printStackTrace();
     }
 
+    BookCollection bookCollection =new BookCollection(loadbook);
 
-    return result;
+    return bookCollection;
 
 
 
