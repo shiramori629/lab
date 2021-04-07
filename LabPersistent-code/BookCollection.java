@@ -240,7 +240,7 @@ public class BookCollection {
 
     try {
       DocumentBuilder db = dbf.newDocumentBuilder();
-      Document doc = db.newDocument();
+      Document doc = db.parse(file);
 
       doc.getDocumentElement().normalize();
 
