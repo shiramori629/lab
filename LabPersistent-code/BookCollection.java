@@ -94,7 +94,8 @@ public class BookCollection {
     // TODO: Implement this function yourself. The specific hierarchy is up to you,
     // but it must be in a bespoke format and should match the
     // load function.
-    try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
+    String filename = file.getName();
+    try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
       oos.writeObject(this);
     } catch (IOException e) {
       // TODO Auto-generated catch block
@@ -185,8 +186,10 @@ public class BookCollection {
    */
   public static BookCollection loadFromBespokeFile(File file) {
     // TODO: Implement this function yourself.
+    String filename = file.getName();
+
     BookCollection result = null;
-    try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+    try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
       result = (BookCollection) ois.readObject();
     } catch (IOException | ClassNotFoundException e) {
       // TODO Auto-generated catch block
@@ -209,7 +212,7 @@ public class BookCollection {
    */
   public static BookCollection loadFromJSONFile(File file) {
     // TODO: Implement this function yourself.
-    BookCollection result = null;
+    List<Book> loadbook = new ArrayList<Book>();
 
     Gson gson = new Gson();
     JsonReader jRead = null;
@@ -220,8 +223,10 @@ public class BookCollection {
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
-    // Here return a list should return bookcollection
-    return gson.fromJson(jRead, BOOK_LIST);
+    BookCollection bookCollection =new BookCollection(gson.fromJson(jRead, BOOK_LIST));
+
+    return bookCollection;
+
 
   }
 
@@ -235,7 +240,7 @@ public class BookCollection {
     // TODO: Implement this function yourself.
 
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-    ArrayList<Book> loadbook = new ArrayList<Book>();
+    List<Book> loadbook = new ArrayList<Book>();
 //    BookCollection bookCollection =new BookCollection(loadbook);
 
     try {
@@ -257,7 +262,7 @@ public class BookCollection {
           String genre = elem.getElementsByTagName("Genre").item(0).getTextContent();
 
 
-          BookGenre bgenre = BookGenre.valueOf(genre);
+          BookGenre bgenre = findEnumbyName(genre);
 
           Book book = new Book(title, aname, year, bgenre);
 
@@ -265,9 +270,7 @@ public class BookCollection {
 
         }
       }
-      // Here return a list should return bookcollection
 
-      // result = loadbook;
       BookCollection bookCollection = new BookCollection(loadbook);
 
     } catch (Exception e) {
@@ -277,6 +280,22 @@ public class BookCollection {
     BookCollection bookCollection =new BookCollection(loadbook);
 
     return bookCollection;
+  }
+
+
+  public static BookGenre findEnumbyName(String name){
+    for(BookGenre bookGenre : BookGenre.values()){
+      if(bookGenre.display().equals(name)){
+        return bookGenre;
+      }
+    }
+    throw new IllegalArgumentException("name is not support");
+  }
+
+  public static void main(String arg[]) {
+    Book book1 = new Book("a","bc",1234,BookGenre.NON_FICTION);
+    File file = new File("book1.bin");
+
 
 
 
